@@ -1,5 +1,9 @@
+#megatron
+regex
+cuda-python
 ray
-horovod
+ipython
+matplotlib
 filelock
 torch
 torchvision
