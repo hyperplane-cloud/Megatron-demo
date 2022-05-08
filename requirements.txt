@@ -1,7 +1,10 @@
 #megatron
 regex
-cuda-python
-ray
+#cuda-python
+pybind11
+Ninja
+nltk
+#ray
 ipython
 matplotlib
 filelock

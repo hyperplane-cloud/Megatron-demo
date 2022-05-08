@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORLD_SIZE=2
+WORLD_SIZE=1
 
 DISTRIBUTED_ARGS="--nproc_per_node $WORLD_SIZE \
                   --nnodes 1 \
@@ -28,7 +28,7 @@ python3 -m torch.distributed.launch $DISTRIBUTED_ARGS ./tasks/main.py \
                --num-layers 24 \
                --hidden-size 1024 \
                --num-attention-heads 16 \
-               --batch-size 8 \
+               --micro-batch-size 8 \
                --activations-checkpoint-method uniform \
                --seq-length 1024 \
                --max-position-embeddings 1024 \
