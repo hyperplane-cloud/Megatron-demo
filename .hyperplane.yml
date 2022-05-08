@@ -1,11 +1,10 @@
 single:
   python_version: 3.8
-  clustering: single # parallel, ray, etc.
   environment_params:
     WORLD_SIZE: 2
     DISTRIBUTED_ARGS: "--nproc_per_node 2 --nnodes 1 --node_rank 0 --master_addr localhost --master_port 6000"
     TASK: "LAMBADA"
-    VALID_DATA: <lambada path>
+    VALID_DATA: lambada_test.jsonl
     VOCAB_FILE: gpt2-vocab.json
     MERGE_FILE: gpt2-merges.txt
     CHECKPOINT: checkpoints/gpt2_345m
@@ -32,18 +31,18 @@ single:
                --no-load-rng
 distributed:
   python_version: 3.8
-  clustering: parallel
-  nodes: 2
+  clustering:
+    nodes: 1
+    tasks_per_node: 2
   environment_params:
     MASTER_ADDR: localhost
+    MASTER_PORT: 6000
     NODE_RANK: 0
-    GPUS_PER_NODE: 2
-    NNODES: 1
     DATA_PATH: <Specify path and file prefix>_text_document
     CHECKPOINT_PATH: "./outputs/checkpoint"
-    WORLD_SIZE: 2 #$(($GPUS_PER_NODE*$NNODES))
+    WORLD_SIZE: $HYPERPLANE_TOTAL_TASKS
   requirements: ./requirements.txt
-  main: python -m torch.distributed.launch --nproc_per_node $GPUS_PER_NODE --nnodes $NNODES --node_rank $NODE_RANK --master_addr $MASTER_ADDR --master_port $MASTER_PORT \
+  main: python -m torch.distributed.launch --nproc_per_node $HYPERPLANE_TASKS_PER_NODE --nnodes $HYPERPLANE_NODE_COUNT --node_rank $NODE_RANK --master_addr $MASTER_ADDR --master_port $MASTER_PORT \
        pretrain_gpt.py \
        --num-layers 24 \
        --hidden-size 1024 \
